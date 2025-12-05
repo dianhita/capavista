@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login CRM - Casino Atlantic</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <!-- LOGO -->
+      <img src="logo.png" alt="Logo Casino Atlantic" class="login-logo" />
+
+      <h2 class="login-title">CASINO ATLANTIC CITY</h2>
+      <p class="login-subtitle">Gestión integral de clientes</p>
+
+      <!-- Campo de usuario -->
+      <label for="usernameInput">Nombre de usuario</label>
+      <input type="text" id="usernameInput" placeholder="Ingrese su nombre" class="login-input" />
+
+      <!-- Selector de rol -->
+      <label for="roleSelect">Rol</label>
+      <select id="roleSelect" class="login-input">
+        <option value="customer-service">Atención al Cliente</option>
+        <option value="marketing-manager">Gerente de Marketing</option>
+        <option value="general-manager">Gerente General</option>
+      </select>
+
+      <!-- Botón de login -->
+      <button id="loginBtn" class="btn-login">Iniciar Sesión</button>
+      <p class="login-note">Los permisos se asignan automáticamente según el rol seleccionado</p>
+    </div>
+  </div>
+
+  <!-- Script de login -->
+  <script>
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginBtn.onclick = () => {
+      const name = document.getElementById("usernameInput").value.trim();
+      const role = document.getElementById("roleSelect").value;
+
+      if (!name) {
+        alert("Por favor, ingrese su nombre");
+        return;
+      }
+
+      // Guardar datos del usuario
+      const user = { name, role };
+      localStorage.setItem("user", JSON.stringify(user));
+
+      // Redirigir según el rol
+      const routes = {
+        "customer-service": "dashboard1.html",
+        "marketing-manager": "dashboard2.html",
+        "general-manager": "dashboard3.html"
+      };
+
+      const destination = routes[role];
+      if (destination) {
+        window.location.href = destination;
+      } else {
+        alert("Rol no reconocido");
+      }
+    };
+
+    // Permitir login con Enter
+    document.getElementById("usernameInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        loginBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>

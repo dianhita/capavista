@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Gerente General - Casino Atlantic</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>Casino Atlantic CRM</h2>
+      <ul>
+        <li><button onclick="mostrarSeccion('reportesConsolidados')">📊 Reportes Consolidados</button></li>
+        <li><button onclick="mostrarSeccion('busquedaAvanzada')">🔍 Búsqueda Avanzada</button></li>
+        <li><button onclick="mostrarSeccion('estadisticas')">📈 Estadísticas Generales</button></li>
+      </ul>
+      <div class="logout-section">
+        <button id="logoutBtn" class="btn-logout">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="topbar">
+        <div class="topbar-left"><span class="topbar-title">Gerente General</span></div>
+        <div class="topbar-right">
+          <span class="user-label">Usuario:</span>
+          <span id="userNameSpan" class="user-name">—</span>
+        </div>
+      </div>
+
+      <!-- Reportes Consolidados -->
+      <section id="reportesConsolidados" class="seccion activa">
+        <div class="clientes-header">
+          <div>
+            <h2>Reportes Consolidados</h2>
+            <p class="subtitulo">Análisis detallado de clientes, promociones, incidencias y visitas</p>
+          </div>
+          <div>
+            <button class="btn-verde" onclick="generarConsolidado()">📊 Generar General</button>
+            <button class="btn-nuevo" onclick="descargarConsolidado()">💾 Descargar Reporte</button>
+          </div>
+        </div>
+
+        <div class="filtros">
+          <label for="tipoReporte">Tipo de Reporte:</label>
+          <select id="tipoReporte" onchange="actualizarConsolidado()">
+            <option value="clientes">Clientes</option>
+            <option value="promociones">Promociones</option>
+            <option value="incidencias">Incidencias</option>
+            <option value="visitas">Visitas</option>
+          </select>
+          
+          <label for="periodoConsolidado">Período:</label>
+          <select id="periodoConsolidado" onchange="actualizarConsolidado()">
+            <option value="ultimo-mes">Último mes</option>
+            <option value="ultima-semana">Última semana</option>
+            <option value="trimestre">Trimestre</option>
+            <option value="medio-ano">Medio año</option>
+            <option value="ultimo-ano">Último año</option>
+          </select>
+          
+          <button class="btn-verde" onclick="actualizarConsolidado()">🔄 Actualizar</button>
+        </div>
+
+        <div class="estadisticas-reporte">
+          <div class="card">
+            <i>👥</i>
+            <h3>Total</h3>
+            <p id="rc_total">—</p>
+          </div>
+          <div class="card">
+            <i>✅</i>
+            <h3>Activos</h3>
+            <p id="rc_activos">—</p>
+          </div>
+          <div class="card">
+            <i>⏸️</i>
+            <h3>Inactivos</h3>
+            <p id="rc_inactivos">—</p>
+          </div>
+          <div class="card">
+            <i>🆕</i>
+            <h3>Nuevos</h3>
+            <p id="rc_nuevos">—</p>
+          </div>
+        </div>
+
+        <h3>Top Clientes por Actividad</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Visitas</th>
+            </tr>
+          </thead>
+          <tbody id="rc_topClientes">
+            <tr>
+              <td colspan="2" style="text-align: center;">Cargando datos...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Búsqueda Avanzada -->
+      <section id="busquedaAvanzada" class="seccion">
+        <div class="clientes-header">
+          <div>
+            <h2>Búsqueda Avanzada</h2>
+            <p class="subtitulo">Busque clientes y registros por nombre o DNI</p>
+          </div>
+          <div>
+            <button class="btn-verde" onclick="ejecutarBusqueda()">🔍 Buscar</button>
+          </div>
+        </div>
+
+        <div class="filtros">
+          <input id="ba_query" type="text" placeholder="Ingrese nombre o DNI" />
+          <select id="ba_tipo">
+            <option value="todos">Todos los tipos</option>
+            <option value="cliente">Clientes</option>
+            <option value="visita">Visitas</option>
+            <option value="caso">Incidencias</option>
+            <option value="promocion">Promociones</option>
+          </select>
+          <button class="btn-verde" onclick="ejecutarBusqueda()">🔍 Buscar</button>
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Nombre/DNI</th>
+              <th>Detalle</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody id="ba_resultados">
+            <tr>
+              <td colspan="4" style="text-align: center;">
+                Ingrese un término de búsqueda y presione el botón Buscar
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>💡 Consejos de Búsqueda</h3>
+        <ul class="top-clientes">
+          <li>✓ Puede hacer una búsqueda completa o parcial del cliente</li>
+          <li>✓ Puede buscar por nombre o DNI</li>
+          <li>✓ Puede combinar nombre y DNI para una búsqueda más precisa</li>
+          <li>✓ Puede filtrar por tipo: clientes, visitas, incidencias o promociones</li>
+          <li>✓ Los resultados se muestran en tiempo real desde la base de datos</li>
+        </ul>
+      </section>
+
+      <!-- Estadísticas Generales -->
+      <section id="estadisticas" class="seccion">
+        <div class="clientes-header">
+          <div>
+            <h2>Estadísticas Generales del Sistema</h2>
+            <p class="subtitulo">Vista general del estado del CRM</p>
+          </div>
+          <div>
+            <button class="btn-verde" onclick="cargarEstadisticasGenerales()">🔄 Actualizar</button>
+          </div>
+        </div>
+
+        <h3>📊 Clientes</h3>
+        <div class="estadisticas-reporte">
+          <div class="card">
+            <i>👥</i>
+            <h3>Total Clientes</h3>
+            <p id="stat_total_clientes">—</p>
+          </div>
+          <div class="card">
+            <i>✅</i>
+            <h3>Activos</h3>
+            <p id="stat_clientes_activos">—</p>
+          </div>
+          <div class="card">
+            <i>⏸️</i>
+            <h3>Inactivos</h3>
+            <p id="stat_clientes_inactivos">—</p>
+          </div>
+          <div class="card">
+            <i>🆕</i>
+            <h3>Nuevos (30 días)</h3>
+            <p id="stat_nuevos_clientes">—</p>
+          </div>
+        </div>
+
+        <h3>📅 Visitas y Casos</h3>
+        <div class="estadisticas-reporte">
+          <div class="card">
+            <i>📅</i>
+            <h3>Total Visitas</h3>
+            <p id="stat_total_visitas">—</p>
+          </div>
+          <div class="card">
+            <i>📋</i>
+            <h3>Total Casos</h3>
+            <p id="stat_total_casos">—</p>
+          </div>
+          <div class="card">
+            <i>⚠️</i>
+            <h3>Casos Abiertos</h3>
+            <p id="stat_casos_abiertos">—</p>
+          </div>
+          <div class="card">
+            <i>✅</i>
+            <h3>Tasa Resolución</h3>
+            <p id="stat_tasa_resolucion">—</p>
+          </div>
+        </div>
+
+        <h3>📈 Resumen del Sistema</h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Métrica</th>
+              <th>Valor</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="tablaResumenSistema">
+            <tr>
+              <td colspan="4" style="text-align: center;">Cargando resumen...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="api.js"></script>
+  <script src="dashboard3.js"></script>
+</body>
+</html>
